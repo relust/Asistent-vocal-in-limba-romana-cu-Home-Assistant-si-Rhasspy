@@ -4,8 +4,8 @@ Am făcut tutorial pe forumul https://smarthome360.ro/forums/forum/home-assistan
 Acestea sunt automatizările și setările pe care le-am folosit în acest proiect. 
 Fișierul waw se copie în /share/rhasspy/profiles 
 Directorul slots și fișierele kaldi_custom_words.txt, sentences.ini se copie în /share/rhasspy/profiles/en 
-Fișierul weather.py se copie în directorul /config/phython_scripts 
-Pentru wikipedia trebuie instalt addon-ul Appdaemon. Fișierul rhasspywikipedia.py se copie în /config/appdaemon/apps iar în apps.yaml din directorul appdaemon se scrie:
+Fișierul weather.py se copie în directorul /config/python_scripts 
+Pentru wikipedia trebuie instalt addon-ul Appdaemon pentru că integrarea python_scripts nu suportă funcția import. Fișierul rhasspywikipedia.py se copie în /config/appdaemon/apps iar în apps.yaml din directorul appdaemon se scrie:
 rhasspywikipedia:
   module: rhasspywikipedia 
   class: RhasspyWikipedia
