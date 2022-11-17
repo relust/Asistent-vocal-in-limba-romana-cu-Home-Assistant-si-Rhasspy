@@ -1,0 +1,469 @@
+  mode: single
+- id: Rhasspy GetDate
+  alias: Rhasspy GetDate
+  trigger:
+  - platform: event
+    event_data: {}
+    event_type: rhasspy_GetDate
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "Astăzi este {{ states.sensor.date.state }}"}'
+  mode: single
+- id: Rhasspy GetTime
+  alias: Rhasspy GetTime
+  trigger:
+  - platform: event
+    event_data: {}
+    event_type: rhasspy_GetTime
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "Este ora {{ states.sensor.time.state }}"}'
+  mode: single
+- id: Rhasspy LightsTurnOn
+  alias: Rhasspy LightsTurnOn
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_LightsTurnOn
+  condition: []
+  action:
+  - service: light.turn_{{ trigger.event.data.state }}
+    data:
+      color_name: '{{ trigger.event.data.color }}'
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "{{["ok","ok","ok","oof ce lene ai,","ok","ok","ok","ok","ok","cât
+        de greu poate să fie,","ok","ok","ok","ok","să știi că este ultima dată,","ok","ok","ok"]
+        | random}}, am aprins {{ trigger.event.data.entity_raw_value }}, {{ trigger.event.data.color_raw_value
+        }}"}'
+  mode: single
+- id: Rhasspy LightsTurnOff
+  alias: Rhasspy LightsTurnOff
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_LightsTurnOff
+  condition: []
+  action:
+  - service: light.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "{{["ok","ok","ok","oof ce lene ai,","ok","ok","ok","ok","ok","cât
+        de greu poate să fie,","ok","ok","ok","ok","să știi că este ultima dată,","ok","ok","ok"]
+        | random}}, am stins {{ trigger.event.data.entity_raw_value }}, {{ trigger.event.data.color_raw_value
+        }}"}'
+  mode: single
+- id: '1663427766428'
+  alias: Rhasspy random wav
+  description: ''
+  trigger:
+  - platform: mqtt
+    topic: hermes/hotword/sheila-en/detected
+  condition: []
+  action:
+  - service: shell_command.random_wav
+    data: {}
+  mode: single
+- id: '1664211977669'
+  alias: Rhasspy Multumesc - Cu placere
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_Multumesc
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/endSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "{{["cu plăcere","nici o problemă","cu drag","oricând"] | random}}"}'
+  mode: single
+- id: '1664221755463'
+  alias: Rhasspy Set Temperature
+  description: Set new target temperature
+  trigger:
+  - platform: event
+    event_type: rhasspy_Set_Temperature
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data_template:
+      entity_id: '{{ trigger.event.data.entity | string }}'
+      temperature: '{{ trigger.event.data.temperature | float }}'
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/endSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "ok, temperatura din {{ trigger.event.data.entity_raw_value }} este
+        setaată la {{ trigger.event.data.temperature_raw_value }} de grade"}'
+  mode: single
+- id: '1664290632075'
+  alias: Rhasspy Set Preset mode
+  description: Setează o presetare la centrala(eco, away, off etc)
+  trigger:
+  - platform: event
+    event_type: rhasspy_Set_Preset_Mode
+  condition: []
+  action:
+  - service: climate.set_preset_mode
+    data_template:
+      entity_id: '{{ trigger.event.data.entity | string }}'
+      preset_mode: '{{ trigger.event.data.preset_mode | string }}'
+  mode: single
+- id: '1664377180579'
+  alias: Rhasspy Lock Front Door
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_Lock_Front_Door
+  condition: []
+  action:
+  - device_id: c9aa8902ce81305af2843fdcbad23f41
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/endSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "OK, {{ trigger.event.data.entity_raw_value }} este încuiată"}'
+  mode: single
+- id: '1664379297863'
+  alias: Rhasspy Unlock Front Door key
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_Unlock_Front_Door_key
+  condition: []
+  action:
+  - device_id: c9aa8902ce81305af2843fdcbad23f41
+    domain: lock
+    entity_id: lock.front_door
+    type: unlock
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/endSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "OK, {{ trigger.event.data.entity_raw_value }} este descuiată"}'
+  mode: single
+- id: '1664382832888'
+  alias: Rhasspy Unlock Front Door
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_Unlock_Front_Door
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "care este codul de la {{ trigger.event.data.entity_raw_value }}"}'
+  mode: single
+- id: '1664477895404'
+  alias: Rhasspy SiteId Light Toggle
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SiteIdLightToggle
+  condition: []
+  action:
+  - service: light.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: light.{{ trigger.event.data._intent.siteId }}_light
+  mode: single
+- id: '1664630474786'
+  alias: Rhasspy SiteId Lamp Toggle
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SiteIdLampToggle
+  condition: []
+  action:
+  - service: light.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: light.{{ trigger.event.data._intent.siteId }}_lamp
+  mode: single
+- id: '1664635787872'
+  alias: Rhasspy SiteId Pc Toggle
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SiteIdPcToggle
+  condition: []
+  action:
+  - service: switch.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: switch.{{ trigger.event.data._intent.siteId }}_pc
+  mode: single
+- id: '1664816139366'
+  alias: Rhasspy GetTemperature
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_GetTemperature
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "temperatura din {{ trigger.event.data.entity_raw_value }} este {{
+        state_attr(trigger.event.data.entity | string, ''current_temperature'') }}
+        grade"}'
+  mode: single
+- id: '1664823452827'
+  alias: Rhasspy SiteIdToggleTv
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SiteIdTvToggle
+  condition: []
+  action:
+  - service: switch.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: switch.{{ trigger.event.data._intent.siteId }}_tv
+  mode: single
+- id: '1665633973451'
+  alias: RhasspySiteIdTvNetflix
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SiteIdTvNetflix
+  condition: []
+  action:
+  - service: switch.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: switch.{{ trigger.event.data._intent.siteId }}_tv
+  - service: scene.turn_on
+    target:
+      entity_id: scene.office_tv_netflix
+    metadata: {}
+  mode: single
+- id: '1665634873074'
+  alias: RhasspySiteIdTvLiveTv
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SiteIdTvLiveTv
+  condition: []
+  action:
+  - service: switch.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: switch.{{ trigger.event.data._intent.siteId }}_tv
+  - service: scene.turn_on
+    target:
+      entity_id: scene.officetv_livetv
+    metadata: {}
+  mode: single
+- id: '1665776525186'
+  alias: Rhasspy GetWeather
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_GetWeather
+  condition: []
+  action:
+  - service: python_script.weather
+    data:
+      sessionId: '{{ trigger.event.data._intent.sessionId }}'
+      temperature: '{{ state_attr(''weather.openweathermap'', ''temperature'') }}'
+      wind_speed: '{{state_attr(''weather.openweathermap'', ''wind_speed'') }}'
+      precipitation_probability: '{{states(''sensor.openweathermap_forecast_precipitation_probability'')
+        }}'
+      weather: '{{ states(''sensor.openweathermap_weather'') }}'
+  mode: single
+- id: '1667494398867'
+  alias: Rhasspy Netflix Program Id
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_Netflix_Program_Id
+  condition: []
+  action:
+  - service: switch.turn_{{ trigger.event.data.state }}
+    data: {}
+    target:
+      entity_id: switch.{{ trigger.event.data._intent.siteId }}_tv
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 10
+      milliseconds: 0
+  - service: androidtv.adb_command
+    data:
+      command: '        input keyevent MENU && am start -n com.netflix.ninja/.MainActivity  -a         android.intent.action.VIEW
+        -d https://www.netflix.com/watch/{{ trigger.event.data.program_id }} -f         0x10808000
+        -e source 30 && input keyevent 23 && input keyevent 23 &&         input keyevent
+        23'
+    target:
+      device_id: c681cf2a3d9a5264c96c8c1f0d40d217
+  mode: single
+- id: '1667851294407'
+  alias: Rhasspy Wikipedia
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_Wikipedia
+    enabled: true
+  condition: []
+  action:
+  - event: RHASSPYWIKIPEDIA_EVENT
+    event_data:
+      sessionId: '{{ trigger.event.data._intent.sessionId }}'
+      question: '{{ trigger.event.data.question }}'
+      object: '{{ trigger.event.data.object }}'
+  mode: single
+- id: '1668431199024'
+  alias: RhasspySpotifyPlaylistPlay
+  description: Trimite comanda de play pe un anume dispozitiv de casting
+  trigger:
+  - platform: event
+    event_type: rhasspy_Spotify
+  condition: []
+  action:
+  - service: spotcast.start
+    data:
+      entity_id: '{{ trigger.event.data.entity }}'
+      uri: spotify:playlist:{{ trigger.event.data.playlist }}
+      random_song: true
+      force_playback: true
+      repeat: context
+      shuffle: true
+      start_volume: 60
+  mode: single
+- id: '1668494710009'
+  alias: Rhasspy LightSetColor
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_LightSetColor
+  condition: []
+  action:
+  - service: light.turn_{{ trigger.event.data.state }}
+    data:
+      color_name: '{{ trigger.event.data.color }}'
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text":  "{{["ok","ok","ok","oof ce lene ai,","ok","ok","ok","ok","ok","cât
+        de greu poate să fie,","ok","ok","ok","ok","să știi că este ultima dată,","ok","ok","ok"]
+        | random}}, am setat {{ trigger.event.data.entity_raw_value }}, {{ trigger.event.data.color_raw_value
+        }}"}'
+  mode: single
+- id: '1668498600804'
+  alias: Rhasspy LighSetBrightness
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_LightSetBrightness
+  condition: []
+  action:
+  - service: light.turn_{{ trigger.event.data.state }}
+    data:
+      brightness_pct: '{{ trigger.event.data.brightness }}'
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/continueSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text":  "{{["ok","ok","ok","oof ce lene ai,","ok","ok","ok","ok","ok","cât
+        de greu poate să fie,","ok","ok","ok","ok","să știi că este ultima dată,","ok","ok","ok"]
+        | random}}, am setat {{ trigger.event.data.entity_raw_value }}, la {{ trigger.event.data.brightness_raw_value
+        }} "}'
+  mode: single
+- id: '1668505549187'
+  alias: RhasspySpotifyPause
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SpotifyPause
+  condition: []
+  action:
+  - service: media_player.media_pause
+    data: {}
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  mode: single
+- id: '1668506285522'
+  alias: RhasspySpotifyPlay
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SpotifyPlay
+  condition: []
+  action:
+  - service: media_player.media_play
+    data: {}
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  mode: single
+- id: '1668507307936'
+  alias: RhasspySetVolume
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SetVolume
+  condition: []
+  action:
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.{{ trigger.event.data.number }}
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  mode: single
+- id: '1668509320159'
+  alias: RhasspySpotifyStop
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_SpotifyStop
+  condition: []
+  action:
+  - service: media_player.turn_off
+    data: {}
+    target:
+      entity_id: '{{ trigger.event.data.entity }}'
+  mode: single
+- id: '1668617373783'
+  alias: Rhasspy Cine este Sheila
+  description: ''
+  trigger:
+  - platform: event
+    event_type: rhasspy_CineEști
+  condition: []
+  action:
+  - service: mqtt.publish
+    data:
+      topic: hermes/dialogueManager/endSession
+      payload_template: '{"sessionId": "{{ trigger.event.data._intent.sessionId }}",
+        "text": "Eu sunt asistentul vocal al acestei case. Programul meu funcționează
+        în Hom Asistent prin addonul raspi. Raspi este un set de servicii de asistent
+        vocal pentru mai multe limbi. Nu are implementată limba română dar se poate
+        configura să recunoască comenzi vocale și în limba română"}'
+  mode: single
