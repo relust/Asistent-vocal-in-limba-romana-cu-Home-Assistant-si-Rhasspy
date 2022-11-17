@@ -1,0 +1,11 @@
+(lumina din  bucătărie):light.kitchen_light
+(lumina din camera iustinei):light.Justina_light
+(lumina din  hol):light.hall_front_light
+(lampadarul):light.lampadar
+(party mode):input_boolean.party_mode
+(lumina din baie):(bathroom light)
+(spoturile din bucătărie):light.kitchen_spots
+(veioza din camera iustinei):light.justina_lamp
+(lumina din  birou):light.office_light
+(lumina din camera lui andrei):light.andrew_light
+(aplicele din hol):light.living_light

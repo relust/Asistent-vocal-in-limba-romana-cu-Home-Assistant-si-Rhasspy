@@ -1,0 +1,5 @@
+(camera Iustinei):climate.iustina_room
+(camera lui andrei):climate.andrei_room
+(dormitor):climate.bedroom
+(casă):climate.acasa
+(bucătărie):climate.kitchen
