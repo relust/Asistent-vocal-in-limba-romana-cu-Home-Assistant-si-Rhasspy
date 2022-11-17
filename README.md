@@ -7,3 +7,10 @@ De curând am descoperit Rhasspy care este un set open source de servicii de asi
 Pentru că foloseam de ceva vreme Home Assistant, am zis să îi dau o șansă, să văd dacă pot să fac ceva în limba română.
 
 Aici voi încărca automatizările și setările pe care le-am folosit pentru acest proiect.
+Fișierul waw se copie în /share/rhasspy/profiles
+Directorul slots și fișierele kaldi_custom_words.txt, sentences.ini se copie în /share/rhasspy/profiles/en
+Fișierul weather.py se copie în directorul /config/phython_scripts
+Pentru wikipedia trebuie instalt addon-ul Appdaemon. Fișierul rhasspywikipedia.py se copie în /config/appdaemon/apps iar în apps.yaml din directorul appdaemon se scrie:
+rhasspywikipedia:
+  module: rhasspywikipedia
+  class: RhasspyWikipedia
