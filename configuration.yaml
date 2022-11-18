@@ -1,0 +1,2 @@
+shell_command:
+  random_wav: ssh -i /config/.ssh/id_rsa -o StrictHostKeyChecking=no hassio@192.168.0.182 sudo docker exec addon_47701997_rhasspy /share/rhasspy/profiles/wav/random2.sh
