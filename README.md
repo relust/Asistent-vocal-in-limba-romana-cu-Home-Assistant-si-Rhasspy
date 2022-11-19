@@ -1,6 +1,7 @@
 ASISTENT VOCAL ÎN LIMBA ROMÂNĂ
+
+TUTORIAL https://smarthome360.ro/forums/topic/asistent-vocal-in-limba-romana-cu-home-assistant-si-rhasspy/
 În Home Assistant se instalează addon-ul Rhasspy
-Am făcut tutorial pe forumul https://smarthome360.ro/forums/forum/home-assistant/
 Acestea sunt automatizările și setările pe care le-am folosit în acest proiect. 
 Fișierul waw se copie în /share/rhasspy/profiles 
 Directorul slots și fișierele kaldi_custom_words.txt, sentences.ini se copie în /share/rhasspy/profiles/en 
