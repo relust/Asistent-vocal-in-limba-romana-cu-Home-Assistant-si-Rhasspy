@@ -1,4 +1,5 @@
 ASISTENT VOCAL ÎN LIMBA ROMÂNĂ
+
 Demo: https://youtu.be/_TUVXTEl2JQ
 
 TUTORIAL https://smarthome360.ro/forums/topic/asistent-vocal-in-limba-romana-cu-home-assistant-si-rhasspy/
